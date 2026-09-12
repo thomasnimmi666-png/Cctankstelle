@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CcTankstelle</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151c2c;
+            --card-border: #232d42;
+            --accent-color: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: #0f172a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 20px 12px; min-height: 100vh; }
+        .shop-container { width: 100%; max-width: 480px; }
+
+        .header { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); border: 1px solid var(--card-border); padding: 16px; border-radius: 14px; margin-bottom: 20px; }
+        .brand h1 { font-size: 1.2rem; font-weight: 700; }
+        .brand p { font-size: 0.75rem; color: var(--text-muted); }
+        .btn-help { background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+
+        .section-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+        .product-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+        
+        .product-image { width: 100%; height: 320px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--card-border); }
+        .product-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .product-title { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; }
+        .product-price { color: #60a5fa; font-weight: 700; font-size: 1.2rem; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+        select, input, textarea { width: 100%; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--input-bg); color: var(--text-main); font-size: 0.9rem; outline: none; }
+        textarea { resize: vertical; min-height: 70px; }
+
+        .btn-add { width: 100%; padding: 12px; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+        .cart-card { background: var(--card-bg); border: 2px solid var(--accent-color); border-radius: 14px; padding: 18px; margin-top: 24px; display: none; }
+        .cart-item { display: flex; justify-content: space-between; background: var(--input-bg); border: 1px solid var(--card-border); padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; }
+        .btn-remove { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem; }
+        .cart-total { display: flex; justify-content: space-between; font-weight: 700; padding: 10px 0; border-top: 1px solid var(--card-border); margin-bottom: 14px; }
+
+        .info-box { background: rgba(37, 99, 235, 0.1); border: 1px solid var(--accent-color); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: #93c5fd; margin-bottom: 12px; }
+
+        .btn-send { width: 100%; padding: 13px; background: #0088cc; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.8rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<div class="shop-container">
+    
+    <div class="header">
+        <div class="brand">
+            <h1>CcTankstelle ⛽</h1>
+            <p>Anonym & Diskret bestellen</p>
+        </div>
+        <a onclick="alert('Wähle deine Produkte, wähle deine Kontaktart und schicke die Bestellung direkt ab!')" class="btn-help">Hilfe</a>
+    </div>
+
+    <div class="section-title">Produkte auswählen</div>
+
+    <!-- Produkt 1: M+ -->
+    <div class="product-card">
+        <img src="https://files.catbox.moe/d1tjx5.jpeg" alt="M+" class="product-image">
+        <div class="product-header">
+            <span class="product-title" style="color: #ec4899;">M+</span>
+            <span id="price-mplus" class="product-price">15 €</span>
+        </div>
+        <div class="form-group">
+            <label>Menge (ml) auswählen:</label>
+            <select id="select-mplus" onchange="updatePrice('mplus')">
+                <option value="10 ml" data-price="15">10 ml - 15 €</option>
+                <option value="20 ml" data-price="25">20 ml - 25 €</option>
+                <option value="50 ml" data-price="55">50 ml - 55 €</option>
+                <option value="100 ml" data-price="100">100 ml - 100 €</option>
+            </select>
+        </div>
+        <button class="btn-add" onclick="addToCart('M+', 'select-mplus')">+ In den Warenkorb</button>
+    </div>
+
+    <!-- Produkt 2: M++ -->
+    <div class="product-card">
+        <img src="https://files.catbox.moe/p6otyu.jpeg" alt="M++" class="product-image">
+        <div class="product-header">
+            <span class="product-title" style="color: #3b82f6;">M++</span>
+            <span id="price-mplusplus" class="product-price">20 €</span>
+        </div>
+        <div class="form-group">
+            <label>Menge (ml) auswählen:</label>
+            <select id="select-mplusplus" onchange="updatePrice('mplusplus')">
+                <option value="10 ml" data-price="20">10 ml - 20 €</option>
+                <option value="20 ml" data-price="35">20 ml - 35 €</option>
+                <option value="50 ml" data-price="75">50 ml - 75 €</option>
+                <option value="100 ml" data-price="130">100 ml - 130 €</option>
+            </select>
+        </div>
+        <button class="btn-add" onclick="addToCart('M++', 'select-mplusplus')">+ In den Warenkorb</button>
+    </div>
+
+    <!-- Produkt 3: Flugmodus -->
+    <div class="product-card">
+        <img src="https://files.catbox.moe/m9sjg0.jpeg" alt="Flugmodus" class="product-image">
+        <div class="product-header">
+            <span class="product-title" style="color: #60a5fa;">FLUGMODUS ✈️</span>
+            <span id="price-flugmodus" class="product-price">25 €</span>
+        </div>
+        <div class="form-group">
+            <label>Menge (ml) auswählen:</label>
+            <select id="select-flugmodus" onchange="updatePrice('flugmodus')">
+                <option value="10 ml" data-price="25">10 ml - 25 €</option>
+                <option value="20 ml" data-price="45">20 ml - 45 €</option>
+                <option value="50 ml" data-price="90">50 ml - 90 €</option>
+                <option value="100 ml" data-price="160">100 ml - 160 €</option>
+            </select>
+        </div>
+        <button class="btn-add" onclick="addToCart('FLUGMODUS', 'select-flugmodus')">+ In den Warenkorb</button>
+    </div>
+
+    <!-- Produkt 4: Boost -->
+    <div class="product-card">
+        <img src="https://files.catbox.moe/rhwzko.jpeg" alt="Boost" class="product-image">
+        <div class="product-header">
+            <span class="product-title" style="color: #ef4444;">BOOST ⚡</span>
+            <span id="price-boost" class="product-price">30 €</span>
+        </div>
+        <div class="form-group">
+            <label>Menge (ml) auswählen:</label>
+            <select id="select-boost" onchange="updatePrice('boost')">
+                <option value="10 ml" data-price="30">10 ml - 30 €</option>
+                <option value="20 ml" data-price="55">20 ml - 55 €</option>
+                <option value="50 ml" data-price="110">50 ml - 110 €</option>
+                <option value="100 ml" data-price="200">200 ml - 200 €</option>
+            </select>
+        </div>
+        <button class="btn-add" onclick="addToCart('BOOST', 'select-boost')">+ In den Warenkorb</button>
+    </div>
+
+    <!-- Warenkorb Bereich -->
+    <div id="cart" class="cart-card">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <h3>Dein Warenkorb</h3>
+            <span id="cart-count" style="color: var(--text-muted); font-size: 0.85rem;">0 Artikel</span>
+        </div>
+
+        <div id="cart-items"></div>
+
+        <div class="cart-total">
+            <span>Gesamtsumme:</span>
+            <span id="cart-total-price">0 €</span>
+        </div>
+
+        <div class="section-title" style="margin-top: 15px;">Bestellangaben</div>
+
+        <div class="form-group">
+            <label>Dein Name / Pseudonym:</label>
+            <input type="text" id="cust-name" placeholder="z. B. Max">
+        </div>
+
+        <!-- NEU: Kontaktart auswählen -->
+        <div class="form-group">
+            <label>Bevorzugte Kontaktart:</label>
+            <select id="contact-type">
+                <option value="Telegram">Telegram (Benutzername)</option>
+                <option value="WhatsApp">WhatsApp (Telefonnummer)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Dein Telegram-Name oder deine WhatsApp-Nummer:</label>
+            <input type="text" id="contact-detail" placeholder="@deinName oder +4912345678">
+        </div>
+
+        <div class="form-group">
+            <label>Übergabeart:</label>
+            <select id="delivery-method" onchange="toggleDeliveryOptions()">
+                <option value="Treffen">Persönliches Treffen (Nur Barzahlung)</option>
+                <option value="Versand">Versand (Vorkasse / Online-Zahlung)</option>
+            </select>
+        </div>
+
+        <!-- Option A: Treffen -->
+        <div id="meet-options">
+            <div class="info-box">
+                💵 <strong>Wichtig:</strong> Bei persönlichem Treffen gilt <strong>ausschließlich Barzahlung</strong> vor Ort.
+            </div>
+            <div class="form-group">
+                <label>Deine Stadt / Wunschort:</label>
+                <input type="text" id="cust-city" placeholder="z. B. Berlin Hbf">
+            </div>
+            <div class="form-group">
+                <label>Wunsch-Tag:</label>
+                <input type="date" id="cust-date">
+            </div>
+            <div class="form-group">
+                <label>Wunsch-Uhrzeit:</label>
+                <input type="time" id="cust-time">
+            </div>
+        </div>
+
+        <!-- Option B: Versand -->
+        <div id="shipping-options" style="display: none;">
+            <div class="info-box">
+                📦 <strong>Hinweis:</strong> Versand erfolgt diskret per Post. Wir teilen dir die Zahlungsdaten über deinen gewählten Kontakt mit.
+            </div>
+            <div class="form-group">
+                <label>Vollständige Lieferadresse:</label>
+                <textarea id="cust-address" placeholder="Name&#10;Straße & Nr.&#10;PLZ & Ort"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Gewünschte Bezahlung:</label>
+                <select id="payment-method">
+                    <option value="Krypto (BTC/XMR)">Krypto (Bitcoin / Monero)</option>
+                    <option value="Gutscheinkarte">Gutscheinkarte (z. B. Paysafecard)</option>
+                    <option value="Sonstige">Sonstige (im Chat klären)</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-send" onclick="sendOrder()">Bestellung Absenden</button>
+    </div>
+
+    <footer>
+        <p>Sichere & Anonyme Abwicklung</p>
+    </footer>
+
+</div>
+
+<script>
+    const botToken = "8390160604:AAFUyJLLDohQSDFDVGVfwHKQmJf_kDDqq5w"; 
+    const chatId = "8058257468"; 
+
+    let cart = [];
+
+    function updatePrice(productId) {
+        const select = document.getElementById('select-' + productId);
+        const selectedOption = select.options[select.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        document.getElementById('price-' + productId).innerText = price + ' €';
+    }
+
+    function addToCart(productName, selectId) {
+        const select = document.getElementById(selectId);
+        const selectedOption = select.options[select.selectedIndex];
+        const size = selectedOption.value;
+        const price = parseFloat(selectedOption.getAttribute('data-price'));
+
+        cart.push({ id: Date.now(), name: productName, size: size, price: price });
+        updateCartUI();
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function removeFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        updateCartUI();
+    }
+
+    function updateCartUI() {
+        const cartCard = document.getElementById('cart');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartCount = document.getElementById('cart-count');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+
+        if (cart.length === 0) {
+            cartCard.style.display = 'none';
+            return;
+        }
+
+        cartCard.style.display = 'block';
+        cartCount.innerText = `${cart.length} Artikel`;
+
+        let total = 0;
+        cartItemsContainer.innerHTML = '';
+
+        cart.forEach(item => {
+            total += item.price;
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.innerHTML = `
+                <div>
+                    <strong>${item.name}</strong> (${item.size})<br>
+                    <span style="color: var(--text-muted); font-size: 0.75rem;">Preis: ${item.price} €</span>
+                </div>
+                <button class="btn-remove" onclick="removeFromCart(${item.id})">&times;</button>
+            `;
+            cartItemsContainer.appendChild(itemElement);
+        });
+
+        cartTotalPrice.innerText = `${total} €`;
+    }
+
+    function toggleDeliveryOptions() {
+        const method = document.getElementById('delivery-method').value;
+        if (method === 'Treffen') {
+            document.getElementById('meet-options').style.display = 'block';
+            document.getElementById('shipping-options').style.display = 'none';
+        } else {
+            document.getElementById('meet-options').style.display = 'none';
+            document.getElementById('shipping-options').style.display = 'block';
+        }
+    }
+
+    function sendOrder() {
+        const name = document.getElementById('cust-name').value.trim();
+        const contactType = document.getElementById('contact-type').value;
+        const contactDetail = document.getElementById('contact-detail').value.trim();
+        const method = document.getElementById('delivery-method').value;
+
+        if (!name || cart.length === 0 || !contactDetail) {
+            alert('Bitte fülle den Namen, die Kontaktdetails und wähle mindestens ein Produkt aus.');
+            return;
+        }
+
+        let totalSum = 0;
+        let itemsText = "";
+
+        cart.forEach((item, index) => {
+            totalSum += item.price;
+            itemsText += `  ${index + 1}. ${item.name} (${item.size}) - ${item.price} €\n`;
+        });
+
+        let message = `⛽ *NEUE BESTELLUNG (CcTankstelle)*\n\n` +
+                      `👤 *Name:* ${name}\n` +
+                      `📱 *Kontakt (${contactType}):* ${contactDetail}\n` +
+                      `🚚 *Art:* ${method}\n\n` +
+                      `🛒 *Produkte:*\n${itemsText}\n` +
+                      `💰 *Gesamtsumme:* ${totalSum} €\n`;
+
+        if (method === 'Treffen') {
+            const city = document.getElementById('cust-city').value.trim();
+            const date = document.getElementById('cust-date').value;
+            const time = document.getElementById('cust-time').value;
+
+            if (!city || !date || !time) {
+                alert('Bitte fülle Ort, Wunsch-Tag und Wunsch-Uhrzeit für das Treffen aus.');
+                return;
+            }
+
+            message += `\n📍 *Treffpunkt Details:*\n` +
+                       `- Wunschort: ${city}\n` +
+                       `- Tag: ${date}\n` +
+                       `- Uhrzeit: ${time}\n` +
+                       `💵 *Zahlungsart:* NUR BARZAHLUNG BEI ÜBERGABE`;
+        } else {
+            const address = document.getElementById('cust-address').value.trim();
+            const payment = document.getElementById('payment-method').value;
+
+            if (!address) {
+                alert('Bitte gib deine vollständige Lieferadresse ein.');
+                return;
+            }
+
+            message += `\n📦 *Versand Details:*\n` +
+                       `- Adresse:\n${address}\n` +
+                       `- Gewünschte Bezahlung: ${payment}`;
+        }
+
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok) {
+                if (method === 'Treffen') {
+                    alert('Vielen Dank! Deine Treffen-Anfrage wurde gesendet.\n\nWICHTIG: Vor Ort gilt ausschließlich BARZAHLUNG. Wir melden uns über den gewünschten Kontakt bei dir.');
+                } else {
+                    alert('Vielen Dank! Deine Versand-Bestellung wurde übermittelt.\n\nWir senden dir die Zahlungsanweisungen in Kürze über deine angegebene Kontaktart.');
+                }
+                cart = [];
+                updateCartUI();
+                document.getElementById('cust-name').value = '';
+                document.getElementById('contact-detail').value = '';
+                document.getElementById('cust-address').value = '';
+            } else {
+                alert('Fehler beim Senden. Bitte überprüfe deine Bot-Daten.');
+            }
+        })
+        .catch(error => alert('Verbindungsfehler. Bitte erneut versuchen.'));
+    }
+</script>
+
+</body>
+</html>
